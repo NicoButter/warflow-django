@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warflow - Login</title>
+<link rel="stylesheet" href="{% static 'accounts/css/login_styles.css' %}">
+
+<meta name="google-signin-client_id" content="356408280239-7airslbg59lt2nped9l4dtqm2rf25aii.apps.googleusercontent.com" />
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
+<script>
+function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    fetch("{% url 'accounts:google_login' %}", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}'},
+        body: JSON.stringify({id_token: id_token})
+    })
+    .then(resp => resp.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/';
+        } else {
+            alert(data.error);
+        }
+    });
+}
+</script>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-box">
+        <img src="{% static 'accounts/images/logo.png' %}" alt="Warflow Logo" class="logo">
+        <h1>Iniciar Sesión</h1>
+        <div id="okgoogle" class="g-signin2" data-onsuccess="onSignIn" data-width="240" data-height="50"></div>
+        <p>Solo ingresa tu correo y serás redirigido a Google.</p>
+    </div>
+</div>
+</body>
+</html>
