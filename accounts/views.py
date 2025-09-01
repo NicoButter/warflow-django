@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 import requests
 
 User = get_user_model()
-CLIENT_ID = "TU_CLIENT_ID_AQUI"
+CLIENT_ID = "356408280239-7airslbg59lt2nped9l4dtqm2rf25aii.apps.googleusercontent.com"
 
 @csrf_exempt 
 def google_login(request):
