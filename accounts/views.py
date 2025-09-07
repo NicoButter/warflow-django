@@ -34,7 +34,7 @@ def google_login(request):
             return JsonResponse({'error': 'Usuario no autorizado'}, status=403)
 
         login(request, user)
-        redirect_url = reverse('dashboard_admin') if user.is_staff else reverse('dashboard_user')
+        redirect_url = reverse('dashboard_user') if user.is_staff else reverse('dashboard_user')
         return JsonResponse({'redirect_url': redirect_url})
 
     except ValueError:
