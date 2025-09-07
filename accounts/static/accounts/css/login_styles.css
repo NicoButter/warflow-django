@@ -1,102 +1,89 @@
-body {
-    font-family: sans-serif;
-    background: #50e3c2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.login-box {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.login-box input {
-    padding: 10px;
-    width: 100%;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.login-box .g-signin2 {
-    width: 100% !important;
-}
-
-
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* body {
-    background: linear-gradient(135deg, #4a90e2, #50e3c2);
-    height: 100vh;
+/* Body y fondo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* Header */
+header {
+    background-color: #444C8A;
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+header img {
+    height: 60px;
+}
+
+/* Contenedor principal */
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
-}*/
-
-.login-container {
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
+    padding: 50px 15px;
 }
 
-.login-box {
+/* Tarjeta de login */
+.card {
     background: white;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 450px;
+}
+
+.card-header h3 {
+    margin-bottom: 20px;
+    color: #444C8A;
+}
+
+.card-body h5 {
+    margin-bottom: 10px;
+    color: #444C8A;
+}
+
+/* Alertas */
+.alert {
+    font-size: 0.9rem;
+}
+
+/* Botón de Google */
+#googleSignInBtn {
+    margin-top: 20px;
+}
+
+/* Footer opcional */
+footer {
     text-align: center;
+    margin-top: 40px;
+    color: #777;
+    font-size: 0.8rem;
 }
 
-.login-box .logo {
-    width: 120px;
-    margin-bottom: 20px;
-}
+/* Responsive */
+@media (max-width: 576px) {
+    .card {
+        padding: 20px;
+    }
 
-.login-box h1 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.login-box form {
-    display: flex;
-    flex-direction: column;
-}
-
-.login-box form input {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.login-box form button {
-    padding: 12px;
-    background-color: #4285F4;
-    /* azul Google */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.login-box form button:hover {
-    background-color: #3367D6;
-}
-
-.login-box .note {
-    margin-top: 15px;
-    font-size: 0.9em;
-    color: #666;
+    header h1 {
+        font-size: 1.2rem;
+    }
 }

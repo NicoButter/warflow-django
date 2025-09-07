@@ -1,0 +1,10 @@
+{% load static %}
+<h2>Bienvenido {{ request.user.first_name }}</h2>
+<p>Es la primera vez que ingresas al sistema. Solo puedes crear un proyecto por ahora.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Nombre del proyecto:</label>
+    <input type="text" name="project_name" required>
+    <button type="submit">Crear Proyecto</button>
+</form>

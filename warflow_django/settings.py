@@ -40,11 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'accounts',
     'dashboards',
+    'projects',
 ]
 
 SITE_ID = 1
@@ -144,8 +146,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-LOGIN_URL = '/accounts/login/'
-# LOGIN_REDIRECT_URL = '/'        
+# LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = "/dashboard/"      
 LOGOUT_REDIRECT_URL = '/accounts/login/'  
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'

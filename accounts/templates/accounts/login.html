@@ -1,43 +1,76 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Warflow - Login</title>
+
+<!-- ID de cliente de Google GIS -->
+<meta name="google-signin-client_id" content="412755564966-676n6n8qeehofgo4ihmineteauom13e2.apps.googleusercontent.com" />
+
+<title>GRCU Manager - Login</title>
 <link rel="stylesheet" href="{% static 'accounts/css/login_styles.css' %}">
-
-<meta name="google-signin-client_id" content="356408280239-7airslbg59lt2nped9l4dtqm2rf25aii.apps.googleusercontent.com" />
-
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-function onSignIn(googleUser) {
-    var id_token = googleUser.getAuthResponse().id_token;
-    fetch("{% url 'accounts:google_login' %}", {
-        method: "POST",
-        headers: {'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}'},
-        body: JSON.stringify({id_token: id_token})
-    })
-    .then(resp => resp.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = '/';
-        } else {
-            alert(data.error);
-        }
-    });
+function handleCredentialResponse(response) {
+    console.log("JWT recibido:", response.credential);
+    $.post("{% url 'accounts:google_login' %}", { credential: response.credential })
+     .done(function(data) {
+         console.log("Redirigiendo a:", data.redirect_url);
+         window.location.href = data.redirect_url;
+     })
+     .fail(function(err) {
+         console.error("Error login Google:", err);
+         alert("Error al iniciar sesión con Google.");
+     });
 }
+
+window.onload = function () {
+    google.accounts.id.initialize({
+        client_id: '412755564966-676n6n8qeehofgo4ihmineteauom13e2.apps.googleusercontent.com',
+        callback: handleCredentialResponse,
+        auto_select: false,
+    });
+
+    google.accounts.id.renderButton(
+        document.getElementById("googleSignInBtn"),
+        { theme: "outline", size: "large", text: "signin_with" }
+    );
+
+    google.accounts.id.prompt(); 
+};
 </script>
 </head>
 <body>
-<div class="login-container">
-    <div class="login-box">
-        <img src="{% static 'accounts/images/logo.png' %}" alt="Warflow Logo" class="logo">
-        <h1>Iniciar Sesión</h1>
-        <div id="okgoogle" class="g-signin2" data-onsuccess="onSignIn" data-width="240" data-height="50"></div>
-        <p>Solo ingresa tu correo y serás redirigido a Google.</p>
+<header class="bg-secondary text-white py-4 shadow-sm w-100">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <img src="{% static 'accounts/images/logo_grcu_manager.png' %}" alt="Logo GRCU Manager" style="height: 60px;">
+        <h1 class="h4 mb-0 font-weight-bold text-center flex-grow-1">Bienvenidos a GRCU Manager</h1>
+        <a href="#" class="btn btn-outline-light btn-sm ml-3">
+            <span class="oi oi-info"></span> Acerca de
+        </a>
+    </div>
+</header>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header"><h3>Login</h3></div>
+        <div class="card-body">
+            <h5>Bienvenido</h5>
+            <p>Estimado usuario: Bienvenido a la aplicación GRCU Manager.</p>
+
+            <div class="alert alert-danger" role="alert">
+                <strong>Importante:</strong> Para acceder al sistema es necesario disponer de un correo de <a href="http://www.gmail.com" target="_blank">GMail</a>.
+            </div>
+
+            <hr />
+            <h5>Ingreso al Sistema</h5>
+            <p>Por favor, haga click en el botón a continuación y elija su cuenta de Google para iniciar sesión.</p>
+            <div id="googleSignInBtn"></div>
+        </div>
     </div>
 </div>
 </body>

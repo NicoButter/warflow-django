@@ -1,39 +1,41 @@
 import json
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login
 from google.oauth2 import id_token
 from google.auth.transport import requests as grequests
 from django.contrib.auth import get_user_model
-import requests
 
 User = get_user_model()
-CLIENT_ID = "356408280239-7airslbg59lt2nped9l4dtqm2rf25aii.apps.googleusercontent.com"
 
-@csrf_exempt 
+@csrf_exempt
 def google_login(request):
     if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Método no permitido"}, status=405)
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+    token = request.POST.get("credential")
+    if not token:
+        return JsonResponse({'error': 'No se recibió token'}, status=400)
 
     try:
-        data = json.loads(request.body)
-        token = data.get("id_token")
-    except Exception:
-        return JsonResponse({"success": False, "error": "JSON inválido"}, status=400)
+        idinfo = id_token.verify_oauth2_token(
+            token,
+            grequests.Request(),
+            "412755564966-676n6n8qeehofgo4ihmineteauom13e2.apps.googleusercontent.com"
+        )
+        email = idinfo.get('email')
+        nombre = idinfo.get('name', '')
 
-    # Validar token con Google
-    r = requests.get("https://oauth2.googleapis.com/tokeninfo", params={"id_token": token})
-    if r.status_code != 200:
-        return JsonResponse({"success": False, "error": "Token inválido"}, status=400)
+        # Solo usuarios existentes
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no autorizado'}, status=403)
 
-    info = r.json()
-    email = info.get("email")
-    name = info.get("name")
+        login(request, user)
+        redirect_url = reverse('dashboard_admin') if user.is_staff else reverse('dashboard_user')
+        return JsonResponse({'redirect_url': redirect_url})
 
-    if not email:
-        return JsonResponse({"success": False, "error": "No se pudo obtener el email"}, status=400)
-
-    user, created = User.objects.get_or_create(username=email, defaults={"first_name": name, "email": email})
-    login(request, user)  
-
-    return JsonResponse({"success": True})
+    except ValueError:
+        return JsonResponse({'error': 'Token inválido'}, status=400)

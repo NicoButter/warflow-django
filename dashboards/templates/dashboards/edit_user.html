@@ -1,0 +1,13 @@
+{% load static %}
+<h2>Dashboard de {{ request.user.first_name }}</h2>
+<p>Proyectos donde participas:</p>
+
+<ul>
+{% for membership in memberships %}
+    <li>{{ membership.project.name }} - {{ membership.role }}</li>
+{% empty %}
+    <li>No perteneces a ningún proyecto aún.</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'dashboards:dashboard_welcome' %}">Crear nuevo proyecto</a>
